@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -8,6 +10,7 @@ from app.config import settings
 from app.db import SessionLocal, engine
 from app.models import AdminUser, Base, ReminderRuleGlobal
 from app.routes.auth import router as auth_router
+from app.routes.cron import router as cron_router
 from app.routes.events import router as events_router
 from app.routes.preferences import router as preferences_router
 from app.routes.rules import router as rules_router
@@ -18,7 +21,7 @@ from app.security import hash_password
 
 
 app = FastAPI(title=settings.app_name)
-app.mount("/static", StaticFiles(directory="app/static"), name="static")
+app.mount("/static", StaticFiles(directory=Path(__file__).parent / "static"), name="static")
 
 
 def _ensure_bootstrap_owner(db: Session) -> None:
@@ -111,3 +114,4 @@ app.include_router(events_router)
 app.include_router(webhooks_router)
 app.include_router(preferences_router)
 app.include_router(ses_events_router)
+app.include_router(cron_router)

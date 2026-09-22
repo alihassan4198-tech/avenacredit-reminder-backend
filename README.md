@@ -13,6 +13,15 @@ The form, admin page and unsubscribe page are served by `avenacredit-reminder-fo
 | Database | Supabase Postgres (pooler connection string) |
 | Email | AWS SES; bounces and complaints come back via SNS to `/v1/webhooks/ses-events?token=...` |
 
+## Interim hosting on Vercel (until AWS is available)
+
+The same code runs on Vercel's Python runtime. Vercel detects the FastAPI app in `app/main.py` and routes every path to it (no rewrites needed; `vercel.json` only defines the cron).
+
+- Database: Supabase **transaction pooler** URL (port 6543) in `DATABASE_URL`
+- Reminder sending: Vercel Cron calls `/v1/cron/run-due` daily at 17:00 UTC (Hobby plan limit: once a day), authenticated with `CRON_SECRET`
+- Email: `EMAIL_PROVIDER=mock` until SES (or Mailgun) is configured
+- Env vars: everything from `.env.example` except the `POSTGRES_*` and `SES_EVENTS_*` lines, plus `CRON_SECRET`
+
 ## Key endpoints
 
 - `POST /v1/webhooks/subscriber-onboarded`: reminder form submissions (HMAC-signed with `WEBHOOK_SECRET`)

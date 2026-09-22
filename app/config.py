@@ -46,6 +46,9 @@ class Settings(BaseSettings):
         default=None,
         validation_alias=AliasChoices("ADMIN_PASSWORD", "ADMIN_BOOTSTRAP_PASSWORD"),
     )
+    # Vercel Cron sends Authorization: Bearer <CRON_SECRET> to /v1/cron/run-due.
+    cron_secret: str | None = None
+
     # SES bounce/complaint notifications arrive from SNS at /v1/webhooks/ses-events?token=<SES_EVENTS_TOKEN>.
     ses_events_token: str | None = None
     ses_events_topic_arn: str | None = None

@@ -10,3 +10,8 @@ venv/
 .idea/
 .DS_Store
 Thumbs.db
+
+.vercel
+
+# Node (only for the local Vercel CLI; the backend is Python)
+node_modules/
