@@ -35,6 +35,10 @@ class Settings(BaseSettings):
     ses_region: str = "ca-central-1"
     ses_from_email: str = "no-reply@example.com"
     ses_configuration_set: str | None = None
+    # Vercel reserves AWS_* env names, so SES credentials are read from SES_* names instead.
+    # Leave unset on AWS (Lambda), where the IAM role provides credentials.
+    ses_access_key_id: str | None = None
+    ses_secret_access_key: str | None = None
 
     # Optional one-time bootstrap: creates the first owner only when admin_users is empty.
     # Logins always use the admin_users table; leave these unset once an admin exists.

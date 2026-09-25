@@ -47,6 +47,8 @@ Validation notes:
 }
 ```
 
+
+
 ## 2. Other Card Example
 
 ```json
@@ -75,6 +77,8 @@ Validation notes:
   ]
 }
 ```
+
+
 
 ## 3. Multi-Card Example
 
@@ -111,6 +115,8 @@ Validation notes:
   ]
 }
 ```
+
+
 
 ## 4. Curl Example (Signed Request)
 
@@ -177,15 +183,3 @@ If the same `X-Idempotency-Key` is reused, expected response:
 }
 ```
 
-## 5. Common Error Responses
-
-- `401 Invalid signature`: signature does not match body.
-- `400 Invalid timestamp` or `Timestamp out of allowed window`.
-- `422` validation errors (missing fields, invalid timezone, invalid statement day, empty cards).
-
-## 6. Operational Behavior
-
-- Webhook creates or updates subscriber and cards.
-- Existing matching card (`card_name` + `statement_day`) is reactivated and updated.
-- After card updates are flushed, reminder schedule is rebuilt immediately.
-- Webhook action is written to audit logs.

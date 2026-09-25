@@ -120,15 +120,27 @@ class AmazonSesEmailProvider(EmailProviderInterface):
         region: str,
         from_email: str | None,
         configuration_set: str | None = None,
+        access_key_id: str | None = None,
+        secret_access_key: str | None = None,
     ):
         self.region = region
         self.from_email = from_email
         self.configuration_set = configuration_set
+        self.access_key_id = access_key_id
+        self.secret_access_key = secret_access_key
         self._client = None
 
     def _get_client(self):
         if self._client is None:
-            self._client = boto3.client("sesv2", region_name=self.region)
+            # Explicit keys are used on hosts that cannot expose AWS_* env vars (Vercel reserves those
+            # names); with none set, boto3 falls back to its own credential chain (IAM role on Lambda).
+            credentials = {}
+            if self.access_key_id and self.secret_access_key:
+                credentials = {
+                    "aws_access_key_id": self.access_key_id,
+                    "aws_secret_access_key": self.secret_access_key,
+                }
+            self._client = boto3.client("sesv2", region_name=self.region, **credentials)
         return self._client
 
     def send_email(
@@ -189,6 +201,8 @@ class EmailProviderFactory:
                 region=current_settings.ses_region,
                 from_email=from_email,
                 configuration_set=current_settings.ses_configuration_set,
+                access_key_id=current_settings.ses_access_key_id,
+                secret_access_key=current_settings.ses_secret_access_key,
             )
 
         raise ValueError(f"Unsupported email provider: {current_settings.email_provider}")
