@@ -18,7 +18,7 @@ The form, admin page and unsubscribe page are served by `avenacredit-reminder-fo
 The same code runs on Vercel's Python runtime. Vercel detects the FastAPI app in `app/main.py` and routes every path to it (no rewrites needed; `vercel.json` only defines the cron).
 
 - Database: Supabase **transaction pooler** URL (port 6543) in `DATABASE_URL`
-- Reminder sending: Vercel Cron calls `/v1/cron/run-due` daily at 17:00 UTC (Hobby plan limit: once a day), authenticated with `CRON_SECRET`
+- Reminder sending: Vercel Cron calls `/v1/cron/run-due` daily at 18:00 UTC (Hobby plan limit: once a day; 18:00 covers 10:00 local in every Canadian timezone), authenticated with `CRON_SECRET`
 - Email: `EMAIL_PROVIDER=mock` until SES (or Mailgun) is configured
 - Env vars: everything from `.env.example` except the `POSTGRES_*` and `SES_EVENTS_*` lines, plus `CRON_SECRET`
 
